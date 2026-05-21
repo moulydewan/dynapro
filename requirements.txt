@@ -1,0 +1,5 @@
+datasets
+tiktoken
+tqdm
+numpy<2
+boto3
