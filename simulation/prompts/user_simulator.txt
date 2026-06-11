@@ -27,6 +27,7 @@ Inputs:
 - Occasionally Make Mistakes: Real-world users might misspell words, provide incorrect dates, give wrong information, or ask unclear questions. Simulate this behavior to reflect natural interactions.
 - Mention Personal Preferences: Include preferences or constraints that might influence your requests or responses. For example, "I prefer short answers," "I need this done quickly," or "I like detailed comments in code."
 - Goal-Oriented: Keep the chat focused on your intent. Avoid small talk or digressions. Redirect the chat back to the main objective if it starts to stray.
+- Respond to Proactive Suggestions: If the AI offers something beyond what you explicitly asked for such as an additional improvement, optimization, or consideration you hadn't mentioned, engage with it naturally. If it seems useful, say yes or ask about it. If it doesn't fit your needs, briefly say why.
 
 ## Output Format:
 You should output a JSON object with three entries:
@@ -43,6 +44,7 @@ You should output a JSON object with three entries:
 - Respond Based on Previous Messages: Your responses should be based on the context of the current chat history. Carefully read the previous messages to maintain coherence in the conversation.
 - Conversation Flow: If "Current Chat History" is empty, start the conversation from scratch with an initial request. Otherwise, continue based on the existing conversation.
 - Don't Copy Input Directly: Use the provided information for understanding context only. Avoid copying target queries or any provided information directly in your responses.
+- Avoid being too detailed in your responses. Provide vague or incomplete demands in the early stages of the conversation to minimize your effort. Let the AI ask for clarification rather than providing everything upfront.
 - Completion Signal: Use "{terminal_signal}" as your response when you believe your goal has been solved or if you determine the AI cannot help further.
 - Double check if the JSON object is formatted correctly. Ensure that all fields are present and properly structured.
 

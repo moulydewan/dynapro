@@ -1,53 +1,72 @@
+# simulation/modules/llm_collaborator.py
 from __future__ import annotations
 
 import json
 import logging
 import boto3
-from typing import List
+from typing import List, Optional
 
 from utils.template import parse_messages
 from utils.extract_json_reliable import extract_json
+from simulation.prompts import PROACT_MODEL_PROMPT
+from simulation.prompts import DYNAPRO_ASSISTANT_PROMPT
+from simulation.prompts import GENERIC_PROACT_PROMPT
 
 logger = logging.getLogger(__name__)
 
 
 class LLMCollaborator(object):
     """
-    Mirrors CollabLLM's LLMCollaborator but uses AWS Bedrock instead of litellm.
-
-    method='none'   → baseline: just answers directly (no special prompt)
-    method='proact' → collaborative: uses PROACT_MODEL_PROMPT (for later)
+    method='none'           → baseline: answers directly
+    method='proact'         → CollabLLM proact prompt
+    method='dynapro'        → DYNAPRO prompt with 6-slot I_t injected
+    method='generic_proact' → generic proactive prompt
     """
 
     registered_prompts = {
         'none': None,
-        'proact': None,  # will be filled in when we add proact support
+        'proact': PROACT_MODEL_PROMPT,
+        'dynapro': DYNAPRO_ASSISTANT_PROMPT,
+        'generic_proact': GENERIC_PROACT_PROMPT,
     }
 
-    def __init__(self, method='none', num_retries=10, region='us-east-1', **llm_kwargs):
-        """
-        Initialize the LLMCollaborator.
-        """
+    def __init__(
+        self,
+        method: str = 'none',
+        num_retries: int = 10,
+        region: str = 'us-east-1',
+        intent_state: Optional[dict] = None,
+        **llm_kwargs
+    ):
         super().__init__()
         self.method = method
         assert method in self.registered_prompts, \
-            f"Prompting method {method} not registered. Available methods: {list(self.registered_prompts.keys())}"
+            f"Method {method} not registered. Available: {list(self.registered_prompts.keys())}"
         self.num_retries = num_retries
         self.llm_kwargs = {"temperature": 0.8, "max_tokens": 2048, **llm_kwargs}
         self.client = boto3.client('bedrock-runtime', region_name=region)
+        self.intent_state = intent_state
 
     def __call__(self, messages: List[dict], **kwargs) -> str:
-        """
-        Forward pass of the LLMCollaborator.
-        """
         assert messages[-1]['role'] == 'user'
 
         if self.method == 'none':
-            if len(messages) and messages[0]['role'] == 'system':
-                logger.info('System message detected.')
             input_messages = messages
+
         else:
-            raise NotImplementedError("proact method not implemented yet.")
+            prompt_template = self.registered_prompts[self.method]
+
+            if self.method == 'dynapro' and self.intent_state is not None:
+                additional_info = self._format_intent_state(self.intent_state)
+            else:
+                additional_info = ''
+
+            prompt = prompt_template.format(
+                chat_history=parse_messages(messages, strip_sys_prompt=True),
+                max_new_tokens=self.llm_kwargs.get('max_tokens', 2048),
+                additional_info=additional_info,
+            )
+            input_messages = [{"role": "user", "content": prompt}]
 
         for _ in range(self.num_retries):
             try:
@@ -72,11 +91,14 @@ class LLMCollaborator(object):
 
                 if isinstance(full_response, dict):
                     keys = full_response.keys()
-                    if {'current_problem', 'thought', 'response'}.issubset(keys):
+                    if {'current_problem', 'thought', 'response'}.issubset(keys):    # proact
+                        response = full_response.pop('response')
+                        break
+                    elif {'calibration', 'response'}.issubset(keys):                 # dynapro
                         response = full_response.pop('response')
                         break
                     else:
-                        logger.error(f"[LLMCollaborator] Keys {keys} do not match expected keys. Retrying...")
+                        logger.error(f"[LLMCollaborator] Keys {keys} don't match. Retrying...")
                         continue
                 else:
                     response = full_response
@@ -85,9 +107,35 @@ class LLMCollaborator(object):
             except Exception as e:
                 logger.error(f"[LLMCollaborator] Error on attempt: {e}")
                 continue
-
         else:
             logger.error("[LLMCollaborator] All retries failed.")
             return ""
 
         return response.strip()
+
+    def _format_intent_state(self, state: dict) -> str:
+        """
+        Format 6-slot I_t as readable string for injection into assistant prompt.
+        Shows the assistant what's explicitly needed, what's latent, and what's resolved.
+        """
+        lines = ["[Current Intent State — use this to respond proactively]"]
+
+        if state.get("goal"):
+            lines.append(f"\nGoal: {state['goal']}")
+
+        if state.get("explicit_needs"):
+            lines.append("\nExplicit Needs (user directly asked for these — fulfill first):")
+            for item in state["explicit_needs"]:
+                lines.append(f"  - {item}")
+
+        if state.get("latent_needs"):
+            lines.append("\nLatent Needs (user hasn't asked for these — surface ONE if well-timed and valuable):")
+            for item in state["latent_needs"]:
+                lines.append(f"  - {item}")
+
+        if state.get("resolved"):
+            lines.append("\nResolved (already done — do NOT repeat these):")
+            for item in state["resolved"]:
+                lines.append(f"  - {item}")
+
+        return "\n".join(lines)

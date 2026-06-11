@@ -7,7 +7,8 @@ import os
 # always use conda activate dynapro
 from data import datasets_info
 
-dataset_cls = datasets_info["medium"]["class"]
+#dataset_cls = datasets_info["medium"]["class"]
+dataset_cls = datasets_info["math_hard"]["class"]
 dataset = dataset_cls().to_hf_dataset()
 
 print(dataset)
@@ -19,8 +20,8 @@ os.makedirs("output", exist_ok=True)
 train_df = dataset["train"].to_pandas()
 test_df = dataset["test"].to_pandas()
 
-train_df.to_csv("output/medium_train.csv", index=False)
-test_df.to_csv("output/medium_test.csv", index=False)
+train_df.to_csv("output/math_hard_train.csv", index=False)
+test_df.to_csv("output/math_hard_test.csv", index=False)
 
 print("Train shape:", train_df.shape)
 print("Test shape:", test_df.shape)

@@ -1,5 +1,11 @@
+# git add .
+# git commit -m "describe what you changed"
+# git push
+
 datasets
 tiktoken
 tqdm
 numpy<2
 boto3
+nltk
+bert-score
