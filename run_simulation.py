@@ -22,8 +22,8 @@ logger = logging.getLogger(__name__)
 #   'generic_proact'→ proactive prompt only, no tracker (ablation)
 #   'dynapro'       → full system (tracker + intent state injected)
 
-DATASET_NAME = 'bigcodebench'
-METHOD       = 'none'
+DATASET_NAME = 'math_hard'
+METHOD       = 'dynapro'
 USE_TRACKER  = METHOD == 'dynapro' #tracker only runs for dynapro not fore others
 
 USER_MODEL_ID      = 'us.anthropic.claude-haiku-4-5-20251001-v1:0'
@@ -33,7 +33,7 @@ MAX_NEW_TURNS      = 6
 NUM_SAMPLES        = 1
 NUM_ARTICLES       = 10
 OUTPUT_DIR         = 'output/simulations'
-OUTPUT_FILE        = os.path.join(OUTPUT_DIR, f'{DATASET_NAME}_{METHOD}.json')
+OUTPUT_FILE        = os.path.join(OUTPUT_DIR, f'{DATASET_NAME}_{METHOD}_tracker_final.json')
 
 # ── Step 1: Load dataset ───────────────────────────────────────────────────────
 logger.info(f"Loading {DATASET_NAME} dataset... [method={METHOD}, tracker={USE_TRACKER}]")

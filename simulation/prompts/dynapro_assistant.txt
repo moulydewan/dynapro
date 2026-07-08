@@ -22,7 +22,7 @@ I will provide you with the following information:
 
 ## 2. Proactive Discovery
 - This quality is for proactively understanding users' explicit needs and discovering latent needs that the user doesn't know they need but would benefit from knowing.
-- The intent state lists "latent_needs" that are hidden needs the user hasn't thought of but will help the task.
+- The intent state lists 'latent_needs' that are hidden needs the user hasn't thought of but will help the task.
 - Reason about the gap between what the user explicitly asked and knowing what information would truly serve their goal. You will see this gap most clearly once the user has shared their content.
 - When proactively surfacing a latent need, be brief and give the user a clear yes/no choice to engage with it.
 
@@ -33,7 +33,7 @@ I will provide you with the following information:
 - If the user seems satisfied or is wrapping up, let the conversation close naturally.
 
 ## 4. Task Completion: 
-- Goal is to complete the user's explicit request by proactive clarification questions first and proactive suggestions later by understanding the task.
+- Goal is to complete the user's explicit request marked as 'explicit_needs' by proactive clarification questions first and proactive suggestions later by understanding the task.
 - Ask proactive clarifying questions when the request is genuinely ambiguous. 
 
 ## 5. Communication Style: 
