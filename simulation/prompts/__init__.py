@@ -1,18 +1,16 @@
-import os
-import os.path as osp
+from pathlib import Path
 
-current_dir = osp.dirname(__file__)
+PROMPT_DIR = Path(__file__).resolve().parent
 
 TERMINATION_SIGNAL = "[[TERMINATE CHAT]]"
 
-with open(osp.join(current_dir, 'user_simulator.txt'), 'r') as f:
-    USER_SIMULATOR_PROMPT = f.read()
 
-with open(osp.join(current_dir, 'proact_instruction.txt'), 'r') as f:
-    PROACT_MODEL_PROMPT = f.read()
+def _read_prompt(filename):
+    return (PROMPT_DIR / filename).read_text(encoding="utf-8")
 
-with open(osp.join(current_dir, 'dynapro_assistant.txt'), 'r') as f:
-    DYNAPRO_ASSISTANT_PROMPT = f.read()
 
-with open(osp.join(current_dir, 'generic_proact.txt'), 'r') as f:
-    GENERIC_PROACT_PROMPT = f.read()
+USER_SIMULATOR_PROMPT = _read_prompt("user_simulator.txt")
+PROACT_MODEL_PROMPT = _read_prompt("proact_instruction.txt")
+DYNAPRO_ASSISTANT_PROMPT = _read_prompt("dynapro_assistant.txt")
+DYNAPRO_MEDICAL_ASSISTANT_PROMPT = _read_prompt("dynapro_medical_assistant.txt")
+GENERIC_PROACT_PROMPT = _read_prompt("generic_proact.txt")

@@ -1,7 +1,8 @@
 # simulation/modules/tracker.py
 """
 DYNAPRO Intent Tracker
-- Model: GPT-OSS 120B (openai.gpt-oss-120b-1:0) via AWS Bedrock
+- Default model: GPT-OSS 120B via AWS Bedrock; experiment runners may inject
+  a DeepSeek or OpenAI-compatible client instead.
 - Runs after every USER turn (before assistant responds)
 - Output: {context, goal, explicit_needs, latent_needs, resolved, invalidated}
 - Domain-aware: selects prompt based on task_desc
@@ -80,11 +81,6 @@ DIMENSIONS = {
             - Domain boundary awareness: unstated conditions the solution relies on, like assuming variables are positive, or that a function is continuous, or that an answer must be an integer.
             - Verification strategy: whether the student knows how to check their answer or detect errors in their own work
             - Generalization: whether understanding this problem unlocks a broader class of similar problems worth pointing out"""),
-    },
-    "code generation": {
-        "domain_desc":  "code generation and programming assistance",
-        "domain_short": "code generation",
-        "dimensions": "missing information, algorithm pattern, data structures, time and space complexity, optimization decisions, robustness, constraint handling, testability",
     },
     "code generation": {
     "domain_desc":  "code generation and programming assistance",
@@ -260,7 +256,7 @@ def track_intent(
             {"role": "system", "content": system_prompt},
             {"role": "user",   "content": user_message}
         ],
-        "max_completion_tokens": 2048,
+        "max_completion_tokens": 8192,
         "temperature": 0.0,
         "reasoning_effort": "medium"
     }

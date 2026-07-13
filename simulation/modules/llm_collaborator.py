@@ -10,6 +10,7 @@ from utils.template import parse_messages
 from utils.extract_json_reliable import extract_json
 from simulation.prompts import PROACT_MODEL_PROMPT
 from simulation.prompts import DYNAPRO_ASSISTANT_PROMPT
+from simulation.prompts import DYNAPRO_MEDICAL_ASSISTANT_PROMPT
 from simulation.prompts import GENERIC_PROACT_PROMPT
 
 logger = logging.getLogger(__name__)
@@ -19,7 +20,8 @@ class LLMCollaborator(object):
     """
     method='none'           → baseline: answers directly
     method='proact'         → CollabLLM proact prompt
-    method='dynapro'        → DYNAPRO prompt with 6-slot I_t injected
+    method='dynapro'        → DYNAPRO prompt with tracker state injected
+    method='dynapro_medical'→ medical DYNAPRO prompt with the same I_t injection
     method='generic_proact' → generic proactive prompt
     """
 
@@ -27,6 +29,7 @@ class LLMCollaborator(object):
         'none': None,
         'proact': PROACT_MODEL_PROMPT,
         'dynapro': DYNAPRO_ASSISTANT_PROMPT,
+        'dynapro_medical': DYNAPRO_MEDICAL_ASSISTANT_PROMPT,
         'generic_proact': GENERIC_PROACT_PROMPT,
     }
 
@@ -56,7 +59,7 @@ class LLMCollaborator(object):
         else:
             prompt_template = self.registered_prompts[self.method]
 
-            if self.method == 'dynapro' and self.intent_state is not None:
+            if self.method in {'dynapro', 'dynapro_medical'} and self.intent_state is not None:
                 additional_info = self._format_intent_state(self.intent_state)
             else:
                 additional_info = ''
@@ -91,15 +94,13 @@ class LLMCollaborator(object):
 
                 if isinstance(full_response, dict):
                     keys = full_response.keys()
-                    if {'current_problem', 'thought', 'response'}.issubset(keys):    # proact
-                        response = full_response.pop('response')
+                    current_schema = {'current_problem', 'thought', 'response'}
+                    legacy_schema = {'calibration', 'response'}
+                    if current_schema.issubset(keys) or legacy_schema.issubset(keys):
+                        response = full_response['response']
                         break
-                    elif {'calibration', 'response'}.issubset(keys):                 # dynapro
-                        response = full_response.pop('response')
-                        break
-                    else:
-                        logger.error(f"[LLMCollaborator] Keys {keys} don't match. Retrying...")
-                        continue
+                    logger.error(f"[LLMCollaborator] Keys {keys} don't match. Retrying...")
+                    continue
                 else:
                     response = full_response
                     break
@@ -115,8 +116,10 @@ class LLMCollaborator(object):
 
     def _format_intent_state(self, state: dict) -> str:
         """
-        Format 6-slot I_t as readable string for injection into assistant prompt.
-        Shows the assistant what's explicitly needed, what's latent, and what's resolved.
+        Format the tracker fields used by the assistant prompt.
+
+        Context and invalidated items stay in the tracker history but are not
+        injected; the assistant receives goal, open needs, and resolved needs.
         """
         lines = ["[Current Intent State — use this to respond proactively]"]
 
