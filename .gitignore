@@ -1,4 +1,3 @@
-cat > .gitignore << 'EOF'
 # macOS
 .DS_Store
 .AppleDouble
@@ -12,17 +11,18 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .env
+.cache/
 .venv/
 venv/
-*.pyc
 
 # Jupyter
 .ipynb_checkpoints/
 *.ipynb
 
-# Output / data (large files)
+# Generated output / local datasets
 output/
 output.json
+data/raw/
 
 # AWS credentials
 .aws/
@@ -31,4 +31,3 @@ credentials
 # IDE
 .vscode/
 .idea/
-EOF
