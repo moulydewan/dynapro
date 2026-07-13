@@ -1,0 +1,17 @@
+Generator,Judge,Method,N,Anticipation /10,Discovery /10,Calibration /10,Medical Quality /20,Total /50,Judge Temperature,Judge Reasoning,Status,Source Summary
+V4,V4,DynaPro + Medical,100,7.86,6.06,8.03,17.02,38.97,0.0,high,complete,output/judgments_thinking_ablation/dynapro_medical_v4flash_prompt98e58426_simthink_on_evalthink_on_banded_000_099_20260712/four_eval_summary.json
+V4,V4,Original DynaPro,100,7.82,5.92,8.29,17.00,39.03,0.0,high,complete,output/judgments_score_band_ablation/five_methods_banded_v4flash_thinking_high_000_099_20260712/four_eval_summary.json
+V4,V4,Proact,100,7.50,5.84,8.21,17.03,38.58,0.0,high,complete,output/judgments_score_band_ablation/five_methods_banded_v4flash_thinking_high_000_099_20260712/four_eval_summary.json
+V4,V4,Baseline,100,7.90,1.68,8.52,17.82,35.92,0.0,high,complete,output/judgments_score_band_ablation/five_methods_banded_v4flash_thinking_high_000_099_20260712/four_eval_summary.json
+V4,GPT,DynaPro + Medical,100,7.17,5.67,7.22,13.81,33.87,unset,high,complete,output/judgments_v4_generation/v4flash_high_eval_gpt56high_thinking_high_banded_000_099_20260712/four_eval_summary.json
+V4,GPT,Original DynaPro,100,7.36,5.05,7.37,13.69,33.47,unset,high,complete,output/judgments_v4_generation/v4flash_high_eval_gpt56high_thinking_high_banded_000_099_20260712/four_eval_summary.json
+V4,GPT,Proact,100,7.37,5.32,7.15,13.88,33.72,unset,high,complete,output/judgments_v4_generation/v4flash_high_eval_gpt56high_thinking_high_banded_000_099_20260712/four_eval_summary.json
+V4,GPT,Baseline,100,7.74,1.27,6.73,12.40,28.14,unset,high,complete,output/judgments_v4_generation/v4flash_high_eval_gpt56high_thinking_high_banded_000_099_20260712/four_eval_summary.json
+GPT,V4,DynaPro + Medical,100,8.23,6.56,8.45,18.10,41.34,0.0,high,complete,output/judgments_openai_generation/gpt56luna_high_eval_v4flash_thinking_high_banded_000_099_20260712/four_eval_summary.json
+GPT,V4,Original DynaPro,100,8.21,5.59,8.49,18.08,40.37,0.0,high,complete,output/judgments_openai_generation/gpt56luna_high_eval_v4flash_thinking_high_banded_000_099_20260712/four_eval_summary.json
+GPT,V4,Proact,100,8.11,6.26,8.47,18.06,40.90,0.0,high,complete,output/judgments_openai_generation/gpt56luna_high_eval_v4flash_thinking_high_banded_000_099_20260712/four_eval_summary.json
+GPT,V4,Baseline,100,7.99,1.36,8.66,18.37,36.38,0.0,high,complete,output/judgments_openai_generation/gpt56luna_high_eval_v4flash_thinking_high_banded_000_099_20260712/four_eval_summary.json
+GPT,GPT,DynaPro + Medical,100,8.74,6.15,8.21,18.43,41.53,unset,high,complete,output/judgments_openai_generation/gpt56luna_high_eval_gpt56high_thinking_high_banded_000_099_20260712/four_eval_summary.json
+GPT,GPT,Original DynaPro,100,8.71,5.37,8.30,18.41,40.79,unset,high,complete,output/judgments_openai_generation/gpt56luna_high_eval_gpt56high_thinking_high_banded_000_099_20260712/four_eval_summary.json
+GPT,GPT,Proact,100,8.70,6.15,8.24,18.38,41.47,unset,high,complete,output/judgments_openai_generation/gpt56luna_high_eval_gpt56high_thinking_high_banded_000_099_20260712/four_eval_summary.json
+GPT,GPT,Baseline,100,8.54,2.15,8.55,18.39,37.63,unset,high,complete,output/judgments_openai_generation/gpt56luna_high_eval_gpt56high_thinking_high_banded_000_099_20260712/four_eval_summary.json

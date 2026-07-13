@@ -1,0 +1,421 @@
+{
+  "schema_version": "meddialog-experiment-registry-v1",
+  "experiment_id": "meddialog_20260711",
+  "registry_created_on": "2026-07-13",
+  "description": "Canonical index for the July 11 MedDialog generation, evaluation, judge, verbosity, and temperature experiments.",
+  "data_policy": "This registry points to existing artifacts. It does not move, copy, or delete raw outputs.",
+  "code_locations": {
+    "conversation_runner": "run_meddialog.py",
+    "four_evaluator_runner": "judge_meddialog_four_evals.py",
+    "shared_judge_infrastructure": "evaluation/judge_common.py",
+    "legacy_judges": [
+      "experiments/meddialog_20260711/legacy_judges/judge_pairwise_adc.py",
+      "experiments/meddialog_20260711/legacy_judges/judge_absolute_adc.py",
+      "experiments/meddialog_20260711/legacy_judges/judge_absolute_adc_multi.py"
+    ],
+    "verbosity_builder": "experiments/meddialog_20260711/scripts/run_verbosity_ablation.py",
+    "temperature_runner": "experiments/meddialog_20260711/scripts/run_temperature_ablation_medical_only.sh",
+    "generator_content_analysis": "experiments/meddialog_20260711/analysis/analyze_generator_model_content.py",
+    "reasoning_content_analysis": "experiments/meddialog_20260711/analysis/analyze_reasoning_content.py",
+    "verbosity_protocol": "experiments/meddialog_20260711/protocols/VERBOSITY_ABLATION_PROTOCOL.md"
+  },
+  "dataset": {
+    "path": "data/raw/meddialog/english-train.json",
+    "sha256": "568a9c6c670502eec3319c78e9d12c0aebb883c0d1e45095b5dd5f99d8b6b874",
+    "loader": "data/meddialog.py",
+    "selection": "first 100 loaded MedDialog conversations",
+    "source_indices": [
+      0,
+      99
+    ],
+    "n": 100
+  },
+  "methods": [
+    {
+      "key": "dynapro_medical",
+      "label": "DynaPro + Medical",
+      "assistant_prompt": "simulation/prompts/dynapro_medical_assistant.txt",
+      "assistant_prompt_sha256": "98e5842627c9953e1891b975dca3ad5f568b3c20b1e5923e1519fdf3a4c7fbeb",
+      "tracker_used": true
+    },
+    {
+      "key": "dynapro",
+      "label": "Original DynaPro",
+      "assistant_prompt": "simulation/prompts/dynapro_assistant.txt",
+      "assistant_prompt_sha256": "1c64335f80ab41be3ded158345d60601df15ede0532e9d537e570ee6db7902ad",
+      "tracker_used": true
+    },
+    {
+      "key": "proact",
+      "label": "Proact",
+      "assistant_prompt": "simulation/prompts/proact_instruction.txt",
+      "assistant_prompt_sha256": "b75ee5227238e036799278421529ca556f181f68824451f4d77ccd25aff12e0d",
+      "tracker_used": false
+    },
+    {
+      "key": "none",
+      "label": "Baseline",
+      "assistant_prompt": null,
+      "assistant_prompt_sha256": null,
+      "tracker_used": false
+    }
+  ],
+  "excluded_methods": [
+    {
+      "key": "generic_proact",
+      "label": "Generic",
+      "assistant_prompt": "simulation/prompts/generic_proact.txt",
+      "assistant_prompt_sha256": "c64c7ed0590d8ddb978ec4ba2f59a9190dbb58e3e4028dfc1db40e4a7522db44",
+      "reason": "V4 artifacts exist, but there is no matched GPT-5.6 High generation run."
+    }
+  ],
+  "shared_generation_prompts": {
+    "user_simulator": {
+      "path": "simulation/prompts/user_simulator.txt",
+      "sha256": "f83e9f0226b2ba4dc907a1ca64b884bd20a78f03570547d003041535ce945b4d"
+    },
+    "tracker": {
+      "path": "simulation/modules/tracker.py",
+      "note": "The tracker prompt is embedded in source code rather than stored as a standalone prompt file."
+    }
+  },
+  "generation_configurations": {
+    "v4": {
+      "label": "V4 Flash High",
+      "provider": "deepseek",
+      "model": "deepseek-v4-flash",
+      "thinking": "enabled",
+      "reasoning_effort": "high",
+      "user_temperature": 1.0,
+      "assistant_temperature": 0.9,
+      "tracker_temperature_when_used": 0.0,
+      "max_new_turns": 6,
+      "natural_termination_enabled": true,
+      "token_limit_note": "The saved conversation records do not store component token limits. Current source defaults are user simulator 1024, assistant 2048, and tracker 8192; do not summarize every simulator component as max_tokens=8192."
+    },
+    "gpt": {
+      "label": "GPT-5.6 High",
+      "provider": "openai",
+      "model": "gpt-5.6-luna",
+      "thinking": "enabled",
+      "reasoning_effort": "high",
+      "user_temperature": null,
+      "assistant_temperature": null,
+      "tracker_temperature_when_used": null,
+      "max_new_turns": 6,
+      "natural_termination_enabled": true,
+      "retry_merge_manifest": "output/openai_simulations/gpt56luna_high_dynapromedical98e58426_dynapro1c64335f_proactb75ee522_none_workers4_completed100_000_099_20260712/retry_merge_manifest.json",
+      "retry_replacements": 6,
+      "token_limit_note": "The saved conversation records do not store component token limits. Current source defaults are user simulator 1024, assistant 2048, and tracker 8192."
+    }
+  },
+  "generation_artifacts": [
+    {
+      "generator_key": "v4",
+      "method_key": "dynapro_medical",
+      "n": 100,
+      "path": "output/thinking_ablation/dynapro_medical_v4flash_prompt98e58426_thinking_on_000_099_20260712/meddialog_dynapro_medical_deepseek-v4-flash-thinking_00_99.json",
+      "sha256": "d17e9a6e57b2688c8781413283308a530c6ddb0a46cdd3283b965e4bbe82b042"
+    },
+    {
+      "generator_key": "v4",
+      "method_key": "dynapro",
+      "n": 100,
+      "path": "output/simulations/v4flash_dynapro_vs_medical_fc97fb17_000_099_20260712/meddialog_dynapro_deepseek-v4-flash-thinking_00_99.json",
+      "sha256": "cf0ab8c61e3f5acbd784095c86f4939f0ef7ec4d49413568631a7e6276ae6ac9"
+    },
+    {
+      "generator_key": "v4",
+      "method_key": "proact",
+      "n": 100,
+      "path": "output/simulations/v4flash_3methods_000_099_20260712/meddialog_proact_deepseek-v4-flash-thinking_00_99.json",
+      "sha256": "cde3ca878a4a680d7ac1b91e886c855db57a8d6fbfd17da7e1f23635e4f4ed4d"
+    },
+    {
+      "generator_key": "v4",
+      "method_key": "none",
+      "n": 100,
+      "path": "output/simulations/v4flash_3methods_000_099_20260712/meddialog_none_deepseek-v4-flash-thinking_00_99.json",
+      "sha256": "da35a13e28f76ec11722b9a33bb49322309dd3452489181c5771f051b72eb6c3"
+    },
+    {
+      "generator_key": "gpt",
+      "method_key": "dynapro_medical",
+      "n": 100,
+      "path": "output/openai_simulations/gpt56luna_high_dynapromedical98e58426_dynapro1c64335f_proactb75ee522_none_workers4_completed100_000_099_20260712/meddialog_dynapro_medical_gpt-5.6-luna-reasoning-high_00_99_complete.json",
+      "sha256": "99c8be79bcdadd78355131441c9032752b499dfe2c442daeb1a782a18b092537"
+    },
+    {
+      "generator_key": "gpt",
+      "method_key": "dynapro",
+      "n": 100,
+      "path": "output/openai_simulations/gpt56luna_high_dynapromedical98e58426_dynapro1c64335f_proactb75ee522_none_workers4_completed100_000_099_20260712/meddialog_dynapro_gpt-5.6-luna-reasoning-high_00_99_complete.json",
+      "sha256": "b344c82120c9f7111f041e3c6d90193058653bd16b01d4e6a038587338069c98"
+    },
+    {
+      "generator_key": "gpt",
+      "method_key": "proact",
+      "n": 100,
+      "path": "output/openai_simulations/gpt56luna_high_dynapromedical98e58426_dynapro1c64335f_proactb75ee522_none_workers4_completed100_000_099_20260712/meddialog_proact_gpt-5.6-luna-reasoning-high_00_99_complete.json",
+      "sha256": "f4983ca871c5bb7f4a333cc3248c508d7b9df4bec5f3025fda6169bb495545b1"
+    },
+    {
+      "generator_key": "gpt",
+      "method_key": "none",
+      "n": 100,
+      "path": "output/openai_simulations/gpt56luna_high_dynapromedical98e58426_dynapro1c64335f_proactb75ee522_none_workers4_completed100_000_099_20260712/meddialog_none_gpt-5.6-luna-reasoning-high_00_99_complete.json",
+      "sha256": "64e420f0555eef968287f7c293f86e4fd5b8a92ca156f8045cf404ddfe2a83a6"
+    }
+  ],
+  "judge_protocol": {
+    "runner": "judge_meddialog_four_evals.py",
+    "prompt_version": "meddialog-four-independent-evals-v1",
+    "schema_version": "meddialog-four-independent-evals-schema-v2",
+    "score_bands": "enabled",
+    "max_tokens": 8192,
+    "score_ranges": {
+      "anticipation": 10,
+      "discovery": 10,
+      "calibration": 10,
+      "medical_quality": 20,
+      "total": 50
+    },
+    "combined_prompt_sha256": {
+      "anticipation": "f7a7e0fa786efd95b70806dc62a4e424add16bd2edea988ab1e739fcb3a10d9e",
+      "discovery": "ebc1844ab6b9129561b0942816a126507cc1d8b5f3d86eefc213c71c0f32e8ea",
+      "calibration": "de5fc40c0ff1d9de8ca940ca13091ecca36f6c5484a32ef8e90f98ba3f70a1f4",
+      "medical_quality": "81501e8abd59c84335372192cd1d7911fd69d23a360db4162ba76b110ed6ef72"
+    },
+    "prompt_directories": [
+      "evaluation/prompts",
+      "evaluation/prompts/score_bands"
+    ]
+  },
+  "evaluations": {
+    "original_eval": [
+      {
+        "generator_key": "v4",
+        "source_summary": "output/eval/v4flash_dynapro_medical_prompt98_evalpy_all_metrics_20260712/comparison.json",
+        "rows": [
+          {
+            "method_key": "dynapro_medical",
+            "source_key": "dynapro_medical_v4flash_prompt98"
+          }
+        ]
+      },
+      {
+        "generator_key": "v4",
+        "source_summary": "output/eval/v4flash_five_methods_evalpy_all_metrics_20260712/comparison.json",
+        "rows": [
+          {
+            "method_key": "dynapro",
+            "source_key": "dynapro"
+          },
+          {
+            "method_key": "proact",
+            "source_key": "proact"
+          },
+          {
+            "method_key": "none",
+            "source_key": "baseline"
+          }
+        ]
+      },
+      {
+        "generator_key": "gpt",
+        "source_summary": "output/eval/gpt56luna_high_four_methods_completed100_all_metrics_20260712/comparison.json",
+        "rows": [
+          {
+            "method_key": "dynapro_medical",
+            "source_key": "dynapro_medical"
+          },
+          {
+            "method_key": "dynapro",
+            "source_key": "dynapro"
+          },
+          {
+            "method_key": "proact",
+            "source_key": "proact"
+          },
+          {
+            "method_key": "none",
+            "source_key": "baseline"
+          }
+        ]
+      }
+    ],
+    "judge_2x2": [
+      {
+        "generation_key": "v4",
+        "judge_key": "v4",
+        "source_summary": "output/judgments_thinking_ablation/dynapro_medical_v4flash_prompt98e58426_simthink_on_evalthink_on_banded_000_099_20260712/four_eval_summary.json",
+        "method_keys": [
+          "dynapro_medical"
+        ]
+      },
+      {
+        "generation_key": "v4",
+        "judge_key": "v4",
+        "source_summary": "output/judgments_score_band_ablation/five_methods_banded_v4flash_thinking_high_000_099_20260712/four_eval_summary.json",
+        "method_keys": [
+          "dynapro",
+          "proact",
+          "none"
+        ]
+      },
+      {
+        "generation_key": "v4",
+        "judge_key": "gpt",
+        "source_summary": "output/judgments_v4_generation/v4flash_high_eval_gpt56high_thinking_high_banded_000_099_20260712/four_eval_summary.json",
+        "method_keys": [
+          "dynapro_medical",
+          "dynapro",
+          "proact",
+          "none"
+        ]
+      },
+      {
+        "generation_key": "gpt",
+        "judge_key": "v4",
+        "source_summary": "output/judgments_openai_generation/gpt56luna_high_eval_v4flash_thinking_high_banded_000_099_20260712/four_eval_summary.json",
+        "method_keys": [
+          "dynapro_medical",
+          "dynapro",
+          "proact",
+          "none"
+        ]
+      },
+      {
+        "generation_key": "gpt",
+        "judge_key": "gpt",
+        "source_summary": "output/judgments_openai_generation/gpt56luna_high_eval_gpt56high_thinking_high_banded_000_099_20260712/four_eval_summary.json",
+        "method_keys": [
+          "dynapro_medical",
+          "dynapro",
+          "proact",
+          "none"
+        ]
+      }
+    ],
+    "verbosity_ablation": {
+      "protocol": "experiments/meddialog_20260711/protocols/VERBOSITY_ABLATION_PROTOCOL.md",
+      "builder": "experiments/meddialog_20260711/scripts/run_verbosity_ablation.py",
+      "manifest": "output/verbosity_ablation/deterministic_padding_n30_20260712/manifest.json",
+      "condition_labels": {
+        "original": "Original",
+        "original_repeat": "Original Repeat",
+        "padded": "Padded"
+      },
+      "judges": [
+        {
+          "judge_key": "v4",
+          "judge_label": "V4 Flash High",
+          "source_summary": "output/verbosity_ablation/deterministic_padding_n30_20260712/judgments_v4flash_thinking_high_shuffled_seed20260712/four_eval_summary.json",
+          "score_statistics": "output/verbosity_ablation/deterministic_padding_n30_20260712/verbosity_score_descriptive.csv",
+          "length_statistics": "output/verbosity_ablation/deterministic_padding_n30_20260712/verbosity_length_summary.csv"
+        },
+        {
+          "judge_key": "gpt",
+          "judge_label": "GPT-5.6 High",
+          "source_summary": "output/verbosity_ablation/deterministic_padding_n30_20260712/judgments_gpt56luna_high_thinking_high_banded_shuffled_seed20260712/four_eval_summary.json",
+          "score_statistics": "output/verbosity_ablation/deterministic_padding_n30_20260712/analysis_gpt56luna_high_thinking_high_banded_shuffled_seed20260712/verbosity_score_descriptive.csv",
+          "length_statistics": "output/verbosity_ablation/deterministic_padding_n30_20260712/analysis_gpt56luna_high_thinking_high_banded_shuffled_seed20260712/verbosity_length_summary.csv"
+        }
+      ]
+    },
+    "temperature_ablation": [
+      {
+        "generation_key": "v4",
+        "judge_key": "v4",
+        "configuration_label": "V4, temp=0, high reasoning (previous)",
+        "run_group": "previous",
+        "source_summary": "output/judgments_thinking_ablation/dynapro_medical_v4flash_prompt98e58426_simthink_on_evalthink_on_banded_000_099_20260712/four_eval_summary.json"
+      },
+      {
+        "generation_key": "v4",
+        "judge_key": "v4",
+        "configuration_label": "V4, temp=1, high reasoning (current)",
+        "run_group": "current",
+        "source_summary": "output/judgments_temperature_ablation/v4gen_dynapro_medical_eval_v4flash_temp1_high_banded_000_099_20260713/four_eval_summary.json"
+      },
+      {
+        "generation_key": "v4",
+        "judge_key": "gpt",
+        "configuration_label": "GPT, temp unset, high reasoning (previous)",
+        "run_group": "previous",
+        "source_summary": "output/judgments_v4_generation/v4flash_high_eval_gpt56high_thinking_high_banded_000_099_20260712/four_eval_summary.json"
+      },
+      {
+        "generation_key": "v4",
+        "judge_key": "gpt",
+        "configuration_label": "GPT, temp=0, no reasoning (current)",
+        "run_group": "current",
+        "source_summary": "output/judgments_temperature_ablation/v4gen_dynapro_medical_eval_gpt56luna_temp0_reasoning_none_banded_000_099_20260713/four_eval_summary.json"
+      },
+      {
+        "generation_key": "gpt",
+        "judge_key": "v4",
+        "configuration_label": "V4, temp=0, high reasoning (previous)",
+        "run_group": "previous",
+        "source_summary": "output/judgments_openai_generation/gpt56luna_high_eval_v4flash_thinking_high_banded_000_099_20260712/four_eval_summary.json"
+      },
+      {
+        "generation_key": "gpt",
+        "judge_key": "v4",
+        "configuration_label": "V4, temp=1, high reasoning (current)",
+        "run_group": "current",
+        "source_summary": "output/judgments_temperature_ablation/gptgen_dynapro_medical_eval_v4flash_temp1_high_banded_000_099_20260713/four_eval_summary.json"
+      },
+      {
+        "generation_key": "gpt",
+        "judge_key": "gpt",
+        "configuration_label": "GPT, temp unset, high reasoning (previous)",
+        "run_group": "previous",
+        "source_summary": "output/judgments_openai_generation/gpt56luna_high_eval_gpt56high_thinking_high_banded_000_099_20260712/four_eval_summary.json"
+      },
+      {
+        "generation_key": "gpt",
+        "judge_key": "gpt",
+        "configuration_label": "GPT, temp=0, no reasoning (current)",
+        "run_group": "current",
+        "source_summary": "output/judgments_temperature_ablation/gptgen_dynapro_medical_eval_gpt56luna_temp0_reasoning_none_banded_000_099_20260713/four_eval_summary.json",
+        "status": "provisional",
+        "missing_result": "source_index=58, discovery evaluator; 399/400 judge calls succeeded"
+      }
+    ]
+  },
+  "consolidated_outputs": {
+    "builder": "experiments/meddialog_20260711/build_tables.py",
+    "original_eval": "experiments/meddialog_20260711/tables/original_eval.csv",
+    "judge_2x2": "experiments/meddialog_20260711/tables/judge_2x2.csv",
+    "verbosity_ablation": "experiments/meddialog_20260711/tables/verbosity_ablation.csv",
+    "temperature_ablation": "experiments/meddialog_20260711/tables/temperature_ablation.csv"
+  },
+  "noncanonical_or_superseded": [
+    {
+      "artifact": "generic_proact / Generic method outputs",
+      "reason": "V4-only artifacts exist, but no matched GPT-5.6 High generation run exists; Generic is excluded from the canonical four-method comparison."
+    },
+    {
+      "artifact": "DynaPro + Medical row in output/eval/v4flash_five_methods_evalpy_all_metrics_20260712/comparison.json",
+      "reason": "This is an older prompt/run. The canonical V4 DynaPro + Medical original-eval row uses the prompt hash 98e58426 source and has BERTScore F1=0.8229."
+    },
+    {
+      "artifact": "DynaPro + Medical row in output/judgments_score_band_ablation/five_methods_banded_v4flash_thinking_high_000_099_20260712/four_eval_summary.json",
+      "reason": "This older row totals 39.00. The canonical V4 generation to V4 judge medical row is 38.97 from the prompt98/thinking-ablation source."
+    },
+    {
+      "artifact": "unshuffled and prototype verbosity judge directories",
+      "reason": "The canonical V4 verbosity result is the shuffled-seed directory; the GPT result is the shuffled high-reasoning banded directory."
+    }
+  ],
+  "caveats": [
+    "The narrative label Generic was inconsistent with the final tables. The canonical second method is Original DynaPro.",
+    "GPT temperature unset is not the same claim as temperature=0.",
+    "The GPT temperature experiment changes both temperature and reasoning effort, so it does not isolate temperature alone.",
+    "The final GPT-generation/GPT-judge temperature row is provisional because one discovery judgment is missing.",
+    "LLM judge outputs are stochastic; repeated scores can vary even with the same conversations and prompt.",
+    "Conversation JSON files do not snapshot the full assistant prompt, so prompt hashes and the prompt files in this registry are necessary provenance.",
+    "four_eval_details.jsonl files are resume caches and should remain next to their summary files."
+  ]
+}
