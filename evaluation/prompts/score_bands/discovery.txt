@@ -1,0 +1,17 @@
+<|Score Band Anchors|>
+Score anchors:
+
+- 0: Discovery is wholly absent when it is needed, or the visible behavior is
+  entirely counterproductive.
+- 1-2: Very weak: little effective Discovery is visible, and serious
+  shortcomings dominate.
+- 3-4: Weak: some relevant Discovery is visible, but it is limited,
+  inconsistent, or substantially undermined by shortcomings.
+- 5-6: Mixed: meaningful Discovery is visible, but its effectiveness is partial
+  or uneven and important shortcomings remain.
+- 7-8: Strong: Discovery is clearly effective across the trajectory, with only
+  limited shortcomings.
+- 9-10: Exceptional: Discovery is consistently precise and highly effective
+  across the trajectory, with at most negligible shortcomings. Reserve 10 for
+  virtually flawless performance.
+<|End Score Band Anchors|>

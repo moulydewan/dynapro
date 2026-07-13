@@ -1,0 +1,17 @@
+<|Score Band Anchors|>
+Score anchors:
+
+- 0: Medical quality is wholly unacceptable, or the visible behavior is
+  dangerously counterproductive.
+- 1-4: Very weak: little acceptable medical quality is visible, and serious
+  shortcomings dominate.
+- 5-8: Weak: some acceptable medical quality is visible, but it is limited,
+  inconsistent, or substantially undermined by shortcomings.
+- 9-12: Mixed: meaningful medical quality is visible, but its effectiveness is
+  partial or uneven and important shortcomings remain.
+- 13-16: Strong: medical quality is clearly effective across the trajectory,
+  with only limited shortcomings.
+- 17-20: Exceptional: medical quality is consistently sound and highly
+  effective across the trajectory, with at most negligible shortcomings.
+  Reserve 20 for virtually flawless performance.
+<|End Score Band Anchors|>
